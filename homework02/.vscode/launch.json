@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/rkddl/C_Language/lecture10",
-      "program": "c:/Users/rkddl/C_Language/lecture10/build/Debug/outDebug",
+      "cwd": "c:/Users/rkddl/C_Language/homework01",
+      "program": "c:/Users/rkddl/C_Language/homework01/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
