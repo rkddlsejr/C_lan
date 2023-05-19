@@ -4,34 +4,40 @@
 
 int main()
 {
+    char screen[61 * 30 + 1];
+    int width = 60;
+    int height = 30;
     int gs = 1;
     int num = 0;
     int num2 = 0;
     int t = 0;
-    
-    while(gs)
+
+    while (gs)
     {
         if(t==0)
         {
             system("cls");
-            title();
-            printf("숫자를 입력해주세요. -> ");
-            scanf("%d",&num);
-            t=1;
-            gs=1;
-        }
+            clear(screen, width, height);
+            title(screen, width, height);
 
+            printf("%s\n숫자를 입력해주세요. -> ", screen);
+            scanf("%d", &num);
+            t = 1;
+            gs = 1;
+        }
+        
         if(num==1)
         {
             system("cls");
-            start();
+            clear(screen, width, height);
+            printf("%s",screen);
             break;
         }
         else if(num==2)
         {
             system("cls");
             story();
-            printf("\n숫자를 입력하세요. : ");
+            printf("\n숫자를 입력하세요. -> ");
             scanf("%d",&num2);
             while(gs)
             {
@@ -47,7 +53,7 @@ int main()
                 }
                 else
                 {
-                    printf("잘못 입력하셨습니다. 다시 입력해주세요.");
+                    printf("잘못 입력하셨습니다. 다시 입력해주세요. -> ");
                     scanf("%d",&num2);
                 }
             }
@@ -59,8 +65,8 @@ int main()
         }
         else
         {
-            printf("잘못 입력하셨습니다. 다시 입력해주세요.");
-            scanf("%d",&num);
+            printf("잘못 입력하셨습니다. 다시 입력해주세요. -> ");
+            scanf("%d",&num2);
         }
     }
 

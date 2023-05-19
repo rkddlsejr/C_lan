@@ -1,55 +1,72 @@
 #include <stdio.h>
 #include "screen.h"
 
-int title()
-{  
-    char map[1800];
-    char name[9] = "Elman War";
-    char st[13] = "1. Game Start";
-    char r[13] = "2. Game Story";
-    char e[7] = "3. Exit";
+int clear(char* screen, int width, int height)
+{
+    int w = 0; // 가로
+    int h = 0; // 세로
 
-    for(int h = 0; h<30; h++)
+    while (h < height)
     {
-        for (int w = 0; w<60; w++)
+        while (w < width)
         {
-            if(h==0||h==29)
-            {map[w] = '=';}
-            else if(w==0||w==57 || h<18 && h>7 && w==52)
-            {map[w] = '|';}
-            else if(h == 11&&w >= 24 && w < 33)
-            {map[w] = name[w - 24];}
-            else if(h == 22 && w>=20 && w<33)
-            {map[w] = st[w-20];}
-            else if(h == 24 && w>=20 && w<33)
-            {map[w] = r[w-20];}
-            else if(h == 26 && w>=20 && w<27)
-            {map[w] = e[w-20];}
-            else if(h==5 && w==25 || h==5 && w==23 || h==5 && w==27 || h==6 && w==27 || h==6 && w==21
-                    || h==7 && w==27 || h==8 && w==25 || h==7 && w==19 || h==9 && w==23 || h==8 && w==17 || h==10 && w==21
-                    || h==9 && w==15 || h==11 && w==19 || h==10 && w==13 || h==12 && w==17 || h==11 && w==15 || h==10 && w==17
-                    || h==9 && w==19 || h==8 && w==21 || h==7 && w==23 || h==6 && w==25)
-            {map[w]='/';}
-            else if(h==11 && w==11 || h==13 && w==15 || h==12 && w==13 || h==12 && w==9 
-                    || h==14 && w==13 || h==13 && w==11 || h==14 && w==9 || h==15 && w==7
-                    || h==16 && w==5 || h==7 && w==52 || h==6 && w==50 || h==6 && w==48 || h==6 && w==46 || h==7 && w==44 
-                    || h==8 && w==42 || h==9 && w==40 || h==10 && w==38 || h==11 && w==36 || h==12 && w==34 || h==13 && w==32
-                    || h==14 && w==30 || h==15 && w==28 || h==16 && w==28 || h==17 && w==30 || h==18 && w==32)
-            {map[w]='W';}
-            else if(h==18 && w>32 && w<=52)
-            {map[w]='-';}
-            else if(h==17 && w==51 || h==16 && w==49 || h==15 && w==47 || h==14 && w==45 || h==13 && w==43
-                    || h==12 && w==41 || h==11 && w==39 || h==10 && w==37 || h==9 && w==35 || h==8 && w==33)
-            {map[w]='\\';}
-            else if(h==7&&w==32)
-            {map[w]='A';}
+            if (h == 0 || h == (height - 1))
+            {
+                screen[w + (h * (width + 1))] = '=';
+            }
+            else if (w == 0 || w == (width - 1))
+            {
+                screen[w + (h * (width + 1))] = '|';
+            }
             else
-            {map[w]=' ';}
+            {
+                screen[w + (h * (width + 1))] = ' ';
+            }
+            w += 1;
         }
-        map[58] = '\n';
-        map[59] = '\0';
-        printf("%s", map);
+        screen[w + (h * (width + 1))] = '\n';
+        w = 0;
+        h += 1;
     }
+    screen[width + 1 + (height * (width + 1))] = '\0';
+
+    return 0;
+}
+
+int write(const char* string, char* screen, int width, int w, int h)
+{
+    int index = w + (h * (width + 1)); // 인덱스 계산
+
+    int i = 0;
+
+    while (string[i] != '\0')
+    {
+        screen[index + i] = string[i];
+        i += 1;
+    }
+
+    return 0;
+}
+
+int title(char* screen, int width, int height)
+{
+    write("/ / /",screen,width,23,5);
+    write("/   / /                  W W W",screen,width,21,6);
+    write("/   /   /   A            W       W",screen,width,19,7);
+    write("/   /   /       \\        W         |",screen,width,17,8);
+    write("/   /   /           \\    W           |",screen,width,15,9);
+    write("/   /   /               \\W             |",screen,width,13,10);
+    write("W   /   /    Elman War   W  \\            |",screen,width,11,11);
+    write("W   W   /                W      \\          |",screen,width,9,12);
+    write("W   W                W          \\        |",screen,width,11,13);
+    write("W   W                W              \\      |",screen,width,9,14);
+    write("W                    W                  \\    |",screen,width,7,15);
+    write("W                      W                    \\  |",screen,width,5,16);
+    write("W                    \\|",screen,width,30,17);
+    write("W--------------------",screen,width,32,18);
+    write("1. Game Start",screen,width,20,22);
+    write("2. Game Story",screen,width,20,24);
+    write("3. Exit",screen,width,20,26);
 
     return 0;
 }
@@ -58,6 +75,7 @@ int enterk()
 {
     char ch = ' ';
     getchar();
+    printf("\n");
 }
 
 int story()
@@ -86,29 +104,8 @@ int story()
     printf("나는 반드시 엘프새끼들을 다 죽여버리고 말 것이다!!");
     enterk();
 
-    printf("\n\n게임을 시작하시겠습니까?\n");
+    printf("\n\n게임을 시작하시겠습니까?\n\n");
     printf("1. 예            2. 메인메뉴");
-    
+
     return 0;
-}
-
-int start()
-{
-    char map[1800];
-
-    for(int h = 0; h<30; h++)
-    {
-        for (int w = 0; w<60; w++)
-        {
-            if(h==0||h==29)
-            {map[w] = '=';}
-            else if(w==0||w==57)
-            {map[w] = '|';}
-            else
-            {map[w]=' ';}
-        }
-        map[58] = '\n';
-        map[59] = '\0';
-        printf("%s", map);
-    }
 }
