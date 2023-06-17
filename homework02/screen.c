@@ -1,7 +1,15 @@
-#include <stdio.h>
 #include "screen.h"
 
-int clear(char* screen, int width, int height)
+int money = 500000;
+int slv = 1;
+int sell_m = 0;
+
+void textcolor(int color)
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+void clear(char* screen, int width, int height)
 {
     int w = 0; // 가로
     int h = 0; // 세로
@@ -29,83 +37,987 @@ int clear(char* screen, int width, int height)
         h += 1;
     }
     screen[width + 1 + (height * (width + 1))] = '\0';
-
-    return 0;
 }
 
-int write(const char* string, char* screen, int width, int w, int h)
+void border()
 {
-    int index = w + (h * (width + 1)); // 인덱스 계산
+    int width = 77;
+    int height = 30;
+    char screen[78 * 30 + 1];
+    system("cls");
+    clear(screen, width, height);
+    printf("%s",screen);
+}
 
-    int i = 0;
+void Setpos(int x, int y)
+{
+    COORD pos = { x,y };
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
 
-    while (string[i] != '\0')
+void delay(char* string)
+{
+    for (char* p = string; *p != '\0'; p++)
     {
-        screen[index + i] = string[i];
-        i += 1;
+        putchar(*p);
+        fflush(stdout);
+        Sleep(1);
     }
-
-    return 0;
+    putchar('\n');
 }
 
-int title(char* screen, int width, int height)
-{
-    write("/ / /",screen,width,23,5);
-    write("/   / /                  W W W",screen,width,21,6);
-    write("/   /   /   A            W       W",screen,width,19,7);
-    write("/   /   /       \\        W         |",screen,width,17,8);
-    write("/   /   /           \\    W           |",screen,width,15,9);
-    write("/   /   /               \\W             |",screen,width,13,10);
-    write("W   /   /    Elman War   W  \\            |",screen,width,11,11);
-    write("W   W   /                W      \\          |",screen,width,9,12);
-    write("W   W                W          \\        |",screen,width,11,13);
-    write("W   W                W              \\      |",screen,width,9,14);
-    write("W                    W                  \\    |",screen,width,7,15);
-    write("W                      W                    \\  |",screen,width,5,16);
-    write("W                    \\|",screen,width,30,17);
-    write("W--------------------",screen,width,32,18);
-    write("1. Game Start",screen,width,20,22);
-    write("2. Game Story",screen,width,20,24);
-    write("3. Exit",screen,width,20,26);
-
-    return 0;
-}
-
-int enterk()
+void enterk()
 {
     char ch = ' ';
     getchar();
-    printf("\n");
 }
 
-int story()
-{ 
-    enterk();
-    printf("-----다음 문장으로 넘기려면 엔터키를 누르세요.-----");
-    enterk();
-    printf("옛날부터 인간과 엘프는 친구처럼 지내왔다.");
-    enterk();
-    printf("하지만 어느날 엘프의 왕이 죽었다는 소식이 들려온 후 엘프들은 이상해지기 시작했다.");
-    enterk();
-    printf("마치 우리가 알던 엘프는 온데간데 없고\n우리를 죽이려는 마음으로만 가득찬 것처럼 보였다.");
-    enterk();
-    printf("그들은 갑자기 우리를 공격하기 시작했다.");
-    enterk();
-    printf("친구처럼 지내던 엘프들이 갑자기 공격하자 사람들은 당황을 금치 못했다.");
-    enterk();
-    printf("대화를 시도해보려는 사람들...");
-    enterk();
-    printf("도망치는 사람들...");
-    enterk();
-    printf("맞서 싸우는 사람들..!!");
-    enterk();
-    printf("나의 친구들, 가족들도 그 개자식들에게 당했다.");
-    enterk();
-    printf("나는 반드시 엘프새끼들을 다 죽여버리고 말 것이다!!");
-    enterk();
+void RemoveCursor()
+{
+    CONSOLE_CURSOR_INFO cursor;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor);
+    cursor.bVisible = 0;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor);
+}
 
-    printf("\n\n게임을 시작하시겠습니까?\n\n");
-    printf("1. 예            2. 메인메뉴");
+void choice()
+{
+    Setpos(0,30);
+    printf("숫자를 입력해주세요. : ");
+}
 
-    return 0;
+void title()
+{
+    border();
+    RemoveCursor();
+    textcolor(4);
+    Setpos(7,1);
+    delay("______");
+    Setpos(22,1);
+    delay("_");
+    Setpos(32,1);
+    delay("_");
+    Setpos(7,2);
+    delay("| ___ \\");
+    Setpos(21,2);
+    delay("(_)");
+    Setpos(31,2);
+    delay("| |");
+    Setpos(7,3);
+    delay("| |_/ /  __ _  _  _ __  | |__    ___  __      __ ");
+    textcolor(14);
+    Setpos(7,4);
+    delay("|    /  / _` || || '_ \\ | '_ \\  / _ \\ \\ \\ /\\ / /");
+    Setpos(7,5);
+    delay("| |\\ \\ | (_| || || | | || |_) || (_) | \\ V  V / ");
+    textcolor(10);
+    Setpos(7,6);
+    delay("\\_| \\_| \\__,_||_||_| |_||_.__/  \\___/   \\_/\\_/ ");
+    textcolor(9);
+    Setpos(30,7);
+    delay("_____");
+    Setpos(64,7);
+    delay("_");
+    Setpos(29,8);
+    delay("/  ___|");
+    textcolor(1);
+    Setpos(63,8);
+    delay("| |");
+    Setpos(29,9);
+    delay("\\ `--. __      __  ___   _ __   __| |");
+    Setpos(30,10);
+    delay("`--. \\\\ \\ /\\ / / / _ \\ | '__| / _` |");
+    textcolor(13);
+    Setpos(29,11);
+    delay("/\\__/ / \\ V  V / | (_) || |   | (_| |");
+    Setpos(29,12);
+    delay("\\____/   \\_/\\_/   \\___/ |_|    \\__,_|");
+    textcolor(7);
+    Setpos(26,13);
+    delay("____________________");
+    Setpos(26,14);
+    delay("\\");
+    Setpos(45,14);
+    delay("/");
+    Setpos(27,15);
+    delay("\\");
+    Setpos(44,15);
+    delay("/");
+    Setpos(28,16);
+    delay("\\______________/");
+    Setpos(32,17);
+    delay("_|");
+    Setpos(36,17);
+    delay("|_");
+    Setpos(31,18);
+    delay("/________\\");
+    textcolor(15);
+    Setpos(1,19);
+    printf("---------------------------------------------------------------------------");
+    Setpos(31,22);
+    printf("1. 게임 시작");
+    Setpos(31,24);
+    printf("2. 게임 설명");
+    Setpos(31,26);
+    printf("3. 게임 종료");
+    choice();
+}
+
+void rule()
+{
+    border();
+    Setpos(19,5);
+    printf("=====================================");
+    Setpos(19,6);
+    printf("|엔터키를 누르면 다음 줄이 나옵니다.|");
+    Setpos(19,7);
+    printf("=====================================");
+    enterk();
+    Setpos(3,10);
+    printf("당신은 대장장이입니다. 검을 강화해서 부자가 되어보세요!");
+    enterk();
+    Setpos(3,12);
+    printf("스페이스 바를 검을 강화할 수 있습니다.");
+    enterk();
+    Setpos(3,14);
+    printf("검의 등급이 높을 수록 많은 돈을 받을 수 있습니다.");
+    enterk();
+    Setpos(3,16);
+    printf("무지개검을 만들면 게임이 끝나게 됩니다.");
+    Setpos(1,19);
+    printf("---------------------------------------------------------------------------");
+    Setpos(31,23);
+    printf("1. 게임 시작");
+    Setpos(31,25);
+    printf("2. 게임 종료");
+    choice();
+}
+
+void gamest()
+{
+    int gamestate = 0;
+    while(1)
+    {
+        border();
+        sword_lv();
+        Setpos(2,3);
+        printf("돈 : %d원",money);
+        Setpos(1,19);
+        printf("---------------------------------------------------------------------------");
+        Setpos(5,24);
+        printf("1. 강화하기        2. 판매하기       3. 아이템      4. 게임종료");
+        choice();
+        scanf("%d", &gamestate);
+        if (gamestate==1)
+        {
+            switch(slv)
+            {
+                case 1:
+                    enforce_1();
+                    break;
+                case 2:
+                    enforce_2();
+                    break;
+                case 3:
+                    enforce_3();
+                    break;
+                case 4:
+                    enforce_4();
+                    break;
+                case 5:
+                    enforce_5();
+                    break;
+                case 6:
+                    enforce_6();
+                    break;
+                case 7:
+                    enforce_7();
+                    break;
+                case 8:
+                    enforce_8();
+                    break;
+                case 9:
+                    end_screen();
+                    break;
+            }
+        }
+        else if (gamestate==2)
+        {
+            money = money + sell_m;
+            slv = 1;
+            gamest();
+        }
+        else if (gamestate==3)
+        {
+            item();
+            int itemstate = 0;
+            choice();
+            scanf("%d", &itemstate);
+            switch(itemstate)
+            {
+                case 1:
+                    if (money >= 50000)
+                    {
+                        slv = 3;
+                        money = money - 50000;
+                        sword_lv();
+                        gamest();
+                    }
+                    else if (money < 50000)
+                    {
+                        Setpos(0,30);
+                        printf("돈이 부족합니다.        ");
+                        Sleep(1000);
+                        gamest();
+                    }
+                    break;
+                case 2:
+                    if (money >= 500000)
+                    {
+                        slv = 5;
+                        money = money - 500000;
+                        sword_lv();
+                        gamest();
+                    }
+                    else if (money < 500000)
+                    {
+                        Setpos(0,30);
+                        printf("돈이 부족합니다.        ");
+                        Sleep(1000);
+                        gamest();
+                    }
+                    break;
+                case 3:
+                    if (money >= 1000000)
+                    {
+                        slv = 6;
+                        money = money - 1000000;
+                        sword_lv();
+                        gamest();
+                    }
+                    else if (money < 1000000)
+                    {
+                        Setpos(0,30);
+                        printf("돈이 부족합니다.        ");
+                        Sleep(1000);
+                        gamest();
+                    }
+                    break;
+                case 4:
+                    if (money >= 10000000)
+                    {
+                        slv = 8;
+                        money = money - 10000000;
+                        sword_lv();
+                        gamest();
+                    }
+                    else if (money < 10000000)
+                    {
+                        Setpos(0,30);
+                        printf("돈이 부족합니다.        ");
+                        Sleep(1000);
+                        gamest();
+                    }
+                    break;
+                default:
+                    Setpos(0,30);
+                    printf("다시 입력해주세요.        ");
+                    Sleep(1000);
+                    choice();
+                    scanf("%d", &gamestate);
+                    break;
+            }
+        }
+        else
+        {
+            Setpos(0,30);
+            printf("다시 입력해주세요.       ");
+            Sleep(1000);
+        }
+    }
+}
+
+void item()
+{
+    Setpos(1,19);
+    printf("---------------------------------------------------------------------------");
+    Setpos(5,24);
+    printf("1. 3lv로 패스 : 50000원     2. 5lv로 패스 : 500000원              ");
+    Setpos(5,26);
+    printf("3. 6lv로 패스 : 1000000원     4. 8lv로 패스 : 10000000원             ");
+}
+
+void sword_lv()
+{
+    switch(slv)
+    {
+        case 1:
+            Setpos(2,5);
+            printf("강화 확률 : 90%%");
+            sword1();
+            break;
+        case 2:
+            Setpos(2,5);
+            printf("강화 확률 : 80%%");
+            sword2();
+            break;
+        case 3:
+            Setpos(2,5);
+            printf("강화 확률 : 70%%");
+            sword3();
+            break;
+        case 4:
+            Setpos(2,5);
+            printf("강화 확률 : 60%%");
+            sword4();
+            break;
+        case 5:
+            Setpos(2,5);
+            printf("강화 확률 : 50%%");
+            sword5();
+            break;
+        case 6:
+            sword6();
+            Setpos(2,5);
+            printf("강화 확률 : 40%%");
+            break;
+        case 7:
+            sword7();
+            Setpos(2,5);
+            printf("강화 확률 : 30%%");
+            break;
+        case 8:
+            sword8();
+            Setpos(2,5);
+            printf("강화 확률 : 20%%");
+            break;
+        case 9:
+            end_screen();
+            Sleep(2000);
+            exit(0);
+            break;
+    }
+}
+
+void enforce_1()
+{
+    int random[101];
+
+    int i = 1;
+
+    srand((unsigned int)time(NULL));
+
+    for (i; i < 5; i++) // 4번 돌아가고 나온 값을 i에 저장
+    {
+        random[i] = rand() % 100 + 1;
+    }
+    
+    if (random[i-1] > 0 && random[i-1] < 91)
+    {
+        Setpos(0,30);
+        printf("강화 성공!!                        ");
+        Sleep(1000);
+        choice();
+        sword2();
+        slv++;
+        gamest();
+    }
+    else
+    {
+        Setpos(0,30);
+        printf("강화 실패...                        ");
+        Sleep(1000);
+        choice();
+        sword1();
+        slv = 1;
+        gamest();
+    }
+}
+
+void enforce_2()
+{
+    int random[101];
+
+    int i = 1;
+
+    srand((unsigned int)time(NULL));
+
+    for (i; i < 5; i++) // 4번 돌아가고 나온 값을 i에 저장
+    {
+        random[i] = rand() % 100 + 1;
+    }
+    
+    if (random[i-1] > 0 && random[i-1] < 81)
+    {
+        Setpos(0,30);
+        printf("강화 성공!!                        ");
+        Sleep(1000);
+        choice();
+        sword2();
+        slv++;
+        gamest();
+    }
+    else
+    {
+        Setpos(0,30);
+        printf("강화 실패...                        ");
+        Sleep(1000);
+        choice();
+        sword1();
+        slv = 1;
+        gamest();
+    }
+}
+
+void enforce_3()
+{
+    int random[101];
+    
+    int i = 1;
+
+    srand((unsigned int)time(NULL));
+
+    for (i; i < 5; i++) // 4번 돌아가고 나온 값을 i에 저장
+    {
+        random[i] = rand() % 100 + 1;
+    }
+    
+    if (random[i-1] > 0 && random[i-1] < 71)
+    {
+        Setpos(0,30);
+        printf("강화 성공!!                        ");
+        Sleep(1000);
+        choice();
+        sword2();
+        slv++;
+        gamest();
+    }
+    else
+    {
+        Setpos(0,30);
+        printf("강화 실패...                        ");
+        Sleep(1000);
+        choice();
+        sword1();
+        slv = 1;
+        gamest();
+    }
+}
+
+void enforce_4()
+{
+    int random[101];
+
+    int i = 1;
+
+    srand((unsigned int)time(NULL));
+
+    for (i; i < 5; i++) // 4번 돌아가고 나온 값을 i에 저장
+    {
+        random[i] = rand() % 100 + 1;
+    }
+    
+    if (random[i-1] > 0 && random[i-1] < 61)
+    {
+        Setpos(0,30);
+        printf("강화 성공!!                        ");
+        Sleep(1000);
+        choice();
+        sword2();
+        slv++;
+        gamest();
+    }
+    else
+    {
+        Setpos(0,30);
+        printf("강화 실패...                        ");
+        Sleep(1000);
+        choice();
+        sword1();
+        slv = 1;
+        gamest();
+    }
+}
+
+void enforce_5()
+{
+    int random[101];
+    
+    int i = 1;
+
+    srand((unsigned int)time(NULL));
+
+    for (i; i < 5; i++) // 4번 돌아가고 나온 값을 i에 저장
+    {
+        random[i] = rand() % 100 + 1;
+    }
+    
+    if (random[i-1] > 0 && random[i-1] < 51)
+    {
+        Setpos(0,30);
+        printf("강화 성공!!                        ");
+        Sleep(1000);
+        choice();
+        sword2();
+        slv++;
+        gamest();
+    }
+    else
+    {
+        Setpos(0,30);
+        printf("강화 실패...                         ");
+        Sleep(1000);
+        sword1();
+        slv = 1;
+        gamest();
+    }
+}
+
+void enforce_6()
+{
+    int random[101];
+
+    int i = 1;
+
+    srand((unsigned int)time(NULL));
+
+    for (i; i < 5; i++) // 4번 돌아가고 나온 값을 i에 저장
+    {
+        random[i] = rand() % 100 + 1;
+    }
+    
+    if (random[i-1] > 0 && random[i-1] < 41)
+    {
+        Setpos(0,30);
+        printf("강화 성공!!                        ");
+        Sleep(1000);
+        choice();
+        sword2();
+        slv++;
+        gamest();
+    }
+    else
+    {
+        Setpos(0,30);
+        printf("강화 실패...                         ");
+        Sleep(1000);
+        choice();
+        sword1();
+        slv = 1;
+        gamest();
+    }
+}
+
+void enforce_7()
+{
+    int random[101];
+
+
+
+    int i = 1;
+
+    srand((unsigned int)time(NULL));
+
+    for (i; i < 5; i++) // 4번 돌아가고 나온 값을 i에 저장
+    {
+        random[i] = rand() % 100 + 1;
+    }
+    
+    if (random[i-1] > 0 && random[i-1] < 31)
+    {
+        Setpos(0,30);
+        printf("강화 성공!!                        ");
+        Sleep(1000);
+        choice();
+        sword2();
+        slv++;
+        gamest();
+    }
+    else
+    {
+        Setpos(0,30);
+        printf("강화 실패...                         ");
+        Sleep(1000);
+        choice();
+        sword1();
+        slv = 1;
+        gamest();
+    }
+}
+
+void enforce_8()
+{
+    int random[101];
+
+    int i = 1;
+
+    srand((unsigned int)time(NULL));
+
+    for (i; i < 5; i++) // 4번 돌아가고 나온 값을 i에 저장
+    {
+        random[i] = rand() % 100 + 1;
+    }
+    
+    if (random[i-1] > 0 && random[i-1] < 21)
+    {
+        Setpos(0,30);
+        printf("강화 성공!!                        ");
+        Sleep(1000);
+        choice();
+        sword2();
+        slv++;
+        gamest();
+    }
+    else
+    {
+        Setpos(0,30);
+        printf("강화 실패...                        ");
+        Sleep(1000);
+        choice();
+        sword1();
+        slv = 1;
+        gamest();
+    }
+}
+
+void sword1()
+{
+    sell_m = 1000;
+    Setpos(2,7);
+    printf("판매금액 : %d원",sell_m);
+    Setpos(35,2);
+    printf("@$");
+    Setpos(34,3);
+    printf("@,@");
+    Setpos(33,4);
+    printf("@;#,");
+    Setpos(32,5);
+    printf("@=@-$");
+    Setpos(31,6);
+    printf("@=#~@#");
+    Setpos(30,7);
+    printf("@$@ -=*");
+    Setpos(28,8);
+    printf("@@@@$@#");
+    Setpos(28,9);
+    printf("@#@@ #@");
+    Setpos(25,10);
+    printf("#=@#@@;#@");
+    Setpos(25,11);
+    printf("#$~@@##@=#");
+    Setpos(25,12);
+    printf(",#@-@!#@#");
+    Setpos(25,13);
+    printf("$@@#-#");
+    Setpos(25,14);
+    printf("@**@$");
+    Setpos(25,15);
+    printf("#$$!");
+}
+
+void sword2()
+{
+    sell_m = 10000;
+    Setpos(2,7);
+    printf("판매금액 : %d원",sell_m);
+    textcolor(4);
+    Setpos(35,2);
+    printf("@$");
+    Setpos(34,3);
+    printf("@,@");
+    Setpos(33,4);
+    printf("@;#,");
+    Setpos(32,5);
+    printf("@=@-$");
+    Setpos(31,6);
+    printf("@=#~@#");
+    Setpos(30,7);
+    printf("@$@ -=*");
+    Setpos(28,8);
+    printf("@@@@$@#");
+    Setpos(28,9);
+    printf("@#@@ #@");
+    Setpos(25,10);
+    printf("#=@#@@;#@");
+    Setpos(25,11);
+    printf("#$~@@##@=#");
+    Setpos(25,12);
+    printf(",#@-@!#@#");
+    Setpos(25,13);
+    printf("$@@#-#");
+    Setpos(25,14);
+    printf("@**@$");
+    Setpos(25,15);
+    printf("#$$!");
+    textcolor(15);
+}
+
+void sword3()
+{
+    sell_m = 50000;
+    Setpos(2,7);
+    printf("판매금액 : %d원", sell_m);
+    textcolor(12);
+    Setpos(35,2);
+    printf("@$");
+    Setpos(34,3);
+    printf("@,@");
+    Setpos(33,4);
+    printf("@;#,");
+    Setpos(32,5);
+    printf("@=@-$");
+    Setpos(31,6);
+    printf("@=#~@#");
+    Setpos(30,7);
+    printf("@$@ -=*");
+    Setpos(28,8);
+    printf("@@@@$@#");
+    Setpos(28,9);
+    printf("@#@@ #@");
+    Setpos(25,10);
+    printf("#=@#@@;#@");
+    Setpos(25,11);
+    printf("#$~@@##@=#");
+    Setpos(25,12);
+    printf(",#@-@!#@#");
+    Setpos(25,13);
+    printf("$@@#-#");
+    Setpos(25,14);
+    printf("@**@$");
+    Setpos(25,15);
+    printf("#$$!");
+    textcolor(15);
+}
+
+void sword4()
+{
+    sell_m = 100000;
+    Setpos(2,7);
+    printf("판매금액 : %d원",sell_m);
+    textcolor(14);
+    Setpos(35,2);
+    printf("@$");
+    Setpos(34,3);
+    printf("@,@");
+    Setpos(33,4);
+    printf("@;#,");
+    Setpos(32,5);
+    printf("@=@-$");
+    Setpos(31,6);
+    printf("@=#~@#");
+    Setpos(30,7);
+    printf("@$@ -=*");
+    Setpos(28,8);
+    printf("@@@@$@#");
+    Setpos(28,9);
+    printf("@#@@ #@");
+    Setpos(25,10);
+    printf("#=@#@@;#@");
+    Setpos(25,11);
+    printf("#$~@@##@=#");
+    Setpos(25,12);
+    printf(",#@-@!#@#");
+    Setpos(25,13);
+    printf("$@@#-#");
+    Setpos(25,14);
+    printf("@**@$");
+    Setpos(25,15);
+    printf("#$$!");
+    textcolor(15);
+}
+
+void sword5()
+{
+    sell_m = 500000;
+    Setpos(2,7);
+    printf("판매금액 : %d원", sell_m);
+    textcolor(10);
+    Setpos(35,2);
+    printf("@$");
+    Setpos(34,3);
+    printf("@,@");
+    Setpos(33,4);
+    printf("@;#,");
+    Setpos(32,5);
+    printf("@=@-$");
+    Setpos(31,6);
+    printf("@=#~@#");
+    Setpos(30,7);
+    printf("@$@ -=*");
+    Setpos(28,8);
+    printf("@@@@$@#");
+    Setpos(28,9);
+    printf("@#@@ #@");
+    Setpos(25,10);
+    printf("#=@#@@;#@");
+    Setpos(25,11);
+    printf("#$~@@##@=#");
+    Setpos(25,12);
+    printf(",#@-@!#@#");
+    Setpos(25,13);
+    printf("$@@#-#");
+    Setpos(25,14);
+    printf("@**@$");
+    Setpos(25,15);
+    printf("#$$!");
+    textcolor(15);
+}
+
+void sword6()
+{
+    sell_m = 1000000;
+    Setpos(2,7);
+    printf("판매금액 : %d원", sell_m);
+    textcolor(9);
+    Setpos(35,2);
+    printf("@$");
+    Setpos(34,3);
+    printf("@,@");
+    Setpos(33,4);
+    printf("@;#,");
+    Setpos(32,5);
+    printf("@=@-$");
+    Setpos(31,6);
+    printf("@=#~@#");
+    Setpos(30,7);
+    printf("@$@ -=*");
+    Setpos(28,8);
+    printf("@@@@$@#");
+    Setpos(28,9);
+    printf("@#@@ #@");
+    Setpos(25,10);
+    printf("#=@#@@;#@");
+    Setpos(25,11);
+    printf("#$~@@##@=#");
+    Setpos(25,12);
+    printf(",#@-@!#@#");
+    Setpos(25,13);
+    printf("$@@#-#");
+    Setpos(25,14);
+    printf("@**@$");
+    Setpos(25,15);
+    printf("#$$!");
+    textcolor(15);
+}
+
+void sword7()
+{
+    sell_m = 2000000;
+    Setpos(2,7);
+    printf("판매금액 : %d원", sell_m);
+    textcolor(1);
+    Setpos(35,2);
+    printf("@$");
+    Setpos(34,3);
+    printf("@,@");
+    Setpos(33,4);
+    printf("@;#,");
+    Setpos(32,5);
+    printf("@=@-$");
+    Setpos(31,6);
+    printf("@=#~@#");
+    Setpos(30,7);
+    printf("@$@ -=*");
+    Setpos(28,8);
+    printf("@@@@$@#");
+    Setpos(28,9);
+    printf("@#@@ #@");
+    Setpos(25,10);
+    printf("#=@#@@;#@");
+    Setpos(25,11);
+    printf("#$~@@##@=#");
+    Setpos(25,12);
+    printf(",#@-@!#@#");
+    Setpos(25,13);
+    printf("$@@#-#");
+    Setpos(25,14);
+    printf("@**@$");
+    Setpos(25,15);
+    printf("#$$!");
+    textcolor(15);
+}
+
+void sword8()
+{
+    sell_m = 5000000;
+    Setpos(2,7);
+    printf("판매금액 : %d원",sell_m);
+    textcolor(13);
+    Setpos(35,2);
+    printf("@$");
+    Setpos(34,3);
+    printf("@,@");
+    Setpos(33,4);
+    printf("@;#,");
+    Setpos(32,5);
+    printf("@=@-$");
+    Setpos(31,6);
+    printf("@=#~@#");
+    Setpos(30,7);
+    printf("@$@ -=*");
+    Setpos(28,8);
+    printf("@@@@$@#");
+    Setpos(28,9);
+    printf("@#@@ #@");
+    Setpos(25,10);
+    printf("#=@#@@;#@");
+    Setpos(25,11);
+    printf("#$~@@##@=#");
+    Setpos(25,12);
+    printf(",#@-@!#@#");
+    Setpos(25,13);
+    printf("$@@#-#");
+    Setpos(25,14);
+    printf("@**@$");
+    Setpos(25,15);
+    printf("#$$!");
+    textcolor(15);
+}
+
+void end_screen()
+{
+    for(int i = 0; i < 3; i++)
+    {
+        system("cls");
+        border();   
+        textcolor(4);
+        Setpos(35,4);
+        delay("@$");
+        Setpos(34,5);
+        delay("@,@");
+        textcolor(12);
+        Setpos(33,6);
+        delay("@;#,");
+        Setpos(32,7);
+        delay("@=@-$");
+        textcolor(14);
+        Setpos(31,8);
+        delay("@=#~@#");
+        Setpos(30,9);
+        delay("@$@ -=*");
+        textcolor(10);
+        Setpos(28,10);
+        delay("@@@@$@#");
+        Setpos(28,11);
+        delay("@#@@ #@");
+        textcolor(9);
+        Setpos(25,12);
+        delay("#=@#@@;#@");
+        Setpos(25,13);
+        delay("#$~@@##@=#");
+        textcolor(1);
+        Setpos(25,14);
+        delay(",#@-@!#@#");
+        Setpos(25,15);
+        delay("$@@#-#");
+        textcolor(13);
+        Setpos(25,16);
+        delay("@**@$");
+        Setpos(25,17);
+        delay("#$$!");
+        textcolor(15);
+    }
+    
+    
+    
 }

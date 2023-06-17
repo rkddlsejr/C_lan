@@ -1,12 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "screen.h"
 
 int main()
 {
-    char screen[61 * 30 + 1];
-    int width = 60;
-    int height = 30;
     int gs = 1;
     int num = 0;
     int num2 = 0;
@@ -14,59 +9,49 @@ int main()
 
     while (gs)
     {
-        if(t==0)
+        if (t == 0)
         {
-            system("cls");
-            clear(screen, width, height);
-            title(screen, width, height);
-
-            printf("%s\n숫자를 입력해주세요. -> ", screen);
+            title();
             scanf("%d", &num);
             t = 1;
-            gs = 1;
         }
-        
-        if(num==1)
+
+        if (num == 1)
         {
-            system("cls");
-            clear(screen, width, height);
-            printf("%s",screen);
-            break;
+            gamest();
         }
-        else if(num==2)
+        else if (num == 2)
         {
-            system("cls");
-            story();
-            printf("\n숫자를 입력하세요. -> ");
+            rule();
             scanf("%d",&num2);
-            while(gs)
+            if (num2 == 1)
             {
-                if(num2==1)
-                {
-                    num=1;
-                    break;
-                }
-                else if(num2==2)
-                {
-                    t=0;
-                    break;
-                }
-                else
-                {
-                    printf("잘못 입력하셨습니다. 다시 입력해주세요. -> ");
-                    scanf("%d",&num2);
-                }
+                num = 1;
+            }
+            else if (num2 == 2)
+            {
+                exit(0);
+            }
+            else
+            {
+                Setpos(0,30);
+                printf("다시 입력해주세요.       ");
+                Sleep(1000);
+                choice();
+                scanf("%d", &num);
             }
         }
-        else if(num==3)
+        else if (num == 3)
         {
-            system("cls");
-            gs = 0;
+            exit(0);
         }
         else
         {
-            printf("잘못 입력하셨습니다. 다시 입력해주세요. -> ");
-            scanf("%d",&num2);
+            Setpos(0,30);
+            printf("다시 입력해주세요.        ");
+            Sleep(1000);
+            choice();
+            scanf("%d", &num);
         }
     }
 
