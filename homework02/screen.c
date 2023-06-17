@@ -4,12 +4,12 @@ int money = 500000;
 int slv = 1;
 int sell_m = 0;
 
-void textcolor(int color)
+void textcolor(int color) // 글씨 색 조절 
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-void clear(char* screen, int width, int height)
+void clear(char* screen, int width, int height) // 테두리 안쪽 비워주는 버퍼
 {
     int w = 0; // 가로
     int h = 0; // 세로
@@ -39,7 +39,7 @@ void clear(char* screen, int width, int height)
     screen[width + 1 + (height * (width + 1))] = '\0';
 }
 
-void border()
+void border() // 테두리 크기조절과 출력
 {
     int width = 77;
     int height = 30;
@@ -49,13 +49,13 @@ void border()
     printf("%s",screen);
 }
 
-void Setpos(int x, int y)
+void Setpos(int x, int y) // 글씨 출력 좌표 설정
 {
     COORD pos = { x,y };
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-void delay(char* string)
+void delay(char* string) // 출력 딜레이 이용해서 애니메이션 효과
 {
     for (char* p = string; *p != '\0'; p++)
     {
@@ -66,13 +66,13 @@ void delay(char* string)
     putchar('\n');
 }
 
-void enterk()
+void enterk() // 엔터키 입력받기
 {
     char ch = ' ';
     getchar();
 }
 
-void RemoveCursor()
+void RemoveCursor() // 애니메이션 출력 때 커서 깜빡임 없애기
 {
     CONSOLE_CURSOR_INFO cursor;
     GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor);
@@ -80,13 +80,13 @@ void RemoveCursor()
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor);
 }
 
-void choice()
+void choice() // 선택 문장 출력
 {
     Setpos(0,30);
     printf("숫자를 입력해주세요. : ");
 }
 
-void title()
+void title() // 타이틀 출력
 {
     border();
     RemoveCursor();
@@ -163,7 +163,7 @@ void title()
     choice();
 }
 
-void rule()
+void rule() // 게임 규칙 출력
 {
     border();
     Setpos(19,5);
@@ -193,7 +193,7 @@ void rule()
     choice();
 }
 
-void gamest()
+void gamest() // 게임 상황 함수
 {
     int gamestate = 0;
     while(1)
@@ -337,7 +337,7 @@ void gamest()
     }
 }
 
-void item()
+void item() // 아이템 목록
 {
     Setpos(1,19);
     printf("---------------------------------------------------------------------------");
@@ -347,7 +347,7 @@ void item()
     printf("3. 6lv로 패스 : 1000000원     4. 8lv로 패스 : 10000000원             ");
 }
 
-void sword_lv()
+void sword_lv() // 검 강화 레벨에 따른 출력들
 {
     switch(slv)
     {
@@ -399,13 +399,13 @@ void sword_lv()
     }
 }
 
-void enforce_1()
+void enforce_1() // 검 강화 함수
 {
-    int random[101];
+    int random[101]; // 랜덤 범위
 
     int i = 1;
 
-    srand((unsigned int)time(NULL));
+    srand((unsigned int)time(NULL)); // 랜덤값 설정
 
     for (i; i < 5; i++) // 4번 돌아가고 나온 값을 i에 저장
     {
@@ -680,7 +680,7 @@ void enforce_8()
     }
 }
 
-void sword1()
+void sword1() // 검 모양 출력
 {
     sell_m = 1000;
     Setpos(2,7);
@@ -974,7 +974,7 @@ void sword8()
     textcolor(15);
 }
 
-void end_screen()
+void end_screen() // 엔딩 무지개검 3번 깜빡인 후 게임 종료
 {
     for(int i = 0; i < 3; i++)
     {
