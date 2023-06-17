@@ -337,7 +337,7 @@ void gamest() // 게임 상황 함수
     }
 }
 
-void item() // 아이템 목록
+void item() // 아이템 목록 출력
 {
     Setpos(1,19);
     printf("---------------------------------------------------------------------------");
@@ -979,7 +979,7 @@ void end_screen() // 엔딩 무지개검 3번 깜빡인 후 게임 종료
     for(int i = 0; i < 3; i++)
     {
         system("cls");
-        border();   
+        border();       
         textcolor(4);
         Setpos(35,4);
         delay("@$");
